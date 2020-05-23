@@ -3,6 +3,8 @@ ROOT_CA_HOME=$1
 STATE=$2
 ORG=$3
 
+echo "STATE=${STATE}"> ".myroot"
+echo "ORG=${ORG}">> ".myroot"
 function usage {
     echo "usage: make_root.sh <root CA path> <state> <org>"
     exit

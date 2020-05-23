@@ -5,12 +5,13 @@ INTERMEDIATE=${INTERMEDIATE_NAME}-home
 
 FULLPATH=${ROOT_CA_HOME}/${INTERMEDIATE}
 
+source .myroot
 function usage {
     echo "usage: make_ca.sh <root CA path> <intermediate CA name>"
     exit
 }
 
-if [ -z "$ROOT_CA_HOME"] || [ -z "$INTERMEDIATE_NAME"] ; then
+if [ -z "$ROOT_CA_HOME" ] || [ -z "$INTERMEDIATE_NAME" ] ; then
     usage
 fi
 mkdir ${FULLPATH}
@@ -29,19 +30,23 @@ default_ca = IntCA
 
 [ IntCA ]
 # Directory and file locations.
-dir               = ${ROOT_CA_HOME}
-private_key     = $dir/private/${INTERMEDIATE_NAME}.key.pem
-certificate     = $dir/certs/${INTERMEDIATE_NAME}.cert.pem
-crl             = $dir/crl/${INTERMEDIATE_NAME}.crl.pem
+dir               = ${FULLPATH}
+private_key     = ${FULLPATH}/private/${INTERMEDIATE_NAME}.key.pem
+certificate     = ${FULLPATH}/certs/${INTERMEDIATE_NAME}.cert.pem
+crl             = ${FULLPATH}/crl/${INTERMEDIATE_NAME}.crl.pem
+new_certs_dir   = ${FULLPATH}/newcerts/
 policy          = policy_loose
+database          = ${FULLPATH}/index.txt
+serial            = ${FULLPATH}/serial
+RANDFILE          = ${FULLPATH}/private/.rand
 
 # The root key and root certificate.
-private_key       = ${ROOT_CA_HOME}/private/ca.key.pem
-certificate       = ${ROOT_CA_HOME}/certs/ca.cert.pem
+private_key       = ${FULLPATH}/private/${INTERMEDIATE_NAME}.key.pem
+certificate       = ${FULLPATH}/certs/${INTERMEDIATE_NAME}.cert.pem
 
 # For certificate revocation lists.
-crlnumber         = ${ROOT_CA_HOME}/crlnumber
-crl               = ${ROOT_CA_HOME}/crl/ca.crl.pem
+crlnumber         = ${FULLPATH}/crlnumber
+crl               = ${FULLPATH}/crl/${INTERMEDIATE_NAME}.crl.pem
 crl_extensions    = crl_ext
 default_crl_days  = 30
 
